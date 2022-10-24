@@ -1,0 +1,36 @@
+# 判断参数
+if [ $# -lt 2 ];then
+    echo "usage: zwg <-e/-s/-t> <file>"
+    exit 1
+fi
+
+source zwscp_config
+
+# 参数
+ARG=$1
+FILE=$2
+
+# 待定参数
+PATH_SCP=
+
+# 判断参数
+case $ARG in
+    -a)
+    PATH_SCP=$PATH_ZW/$FILE
+    ;;
+
+    -e)
+    PATH_SCP=$PATH_EMBED/$FILE
+    ;;
+
+    -s)
+    PATH_SCP=$PATH_SERVE/$FILE
+    ;;
+
+    -t)
+    PATH_SCP=$PATH_TMP/$FILE
+    ;;
+esac
+
+# 拷贝
+scp -r $PATH_SCP .
