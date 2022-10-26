@@ -14,7 +14,7 @@ function sample_work()
         ;;
  
         *)
-        cp ${PATH_SAMPLE_ROOT}/$1 .
+        cp ${PATH_SAMPLE_ROOT}/$1 . -rf
         ;;
     esac
 }
@@ -25,8 +25,8 @@ function sample_work()
 function sample_help()
 {
     echo "CMakeLists.txt   -    CmakeLists sample"
-    echo "index.rst        -    note caption index"
-    echo "test.rst         -    note text"
+    echo "pin              -    [d] pin ops"
+    echo "serial           -    [d] serial ops"
 }
 
 ########################################################################################################
@@ -36,6 +36,7 @@ function sample_entry()
 {
     if [ $1 = '-h' ];then
         sample_help
+        exit 1
     fi
 
     sample_work $1

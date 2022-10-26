@@ -28,7 +28,7 @@ function print_usage()
 ########################################################################################################
 function update_sample()
 {
-	cp $2 ${PATH_ROOT}/$1
+	cp $2 ${PATH_ROOT}/$1 -rf
 }
 
 ########################################################################################################
@@ -37,25 +37,19 @@ function update_sample()
 function zwsample_entry()
 {
 	# 如果参数个数小于2, 打印提示
-	if [[ $# -lt 2 ]];then
+	if [ $# -lt 2 ];then
     	print_usage $@
 		exit 1
 	fi
 
-	# 如果参数输入-h, 并且只有-h, 打印提示
-	if [[ $1 = '-h' ]] && [[ $# = 1 ]];then
+	# 如果参数输入-h
+	if [ $1 = '-h' ];then
 		print_usage $@
 		exit 1
 	fi
 
-	# 如果参数输入-h, 并且有一个class, 打印clas提示
-	if [[ $1 = '-h' ]] && [[ $# = 2 ]];then
-		${PATH_ROOT}/$2/note.i -h
-		exit 1
-	fi
-
 	# 如果参数输入-update,
-	if [[ $1 = '-s' ]] && [[ $# = 3 ]];then
+	if [ $1 = '-s' ];then
 		update_sample $2 $3
 		exit 1
 	fi
