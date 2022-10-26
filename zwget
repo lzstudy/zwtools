@@ -25,10 +25,10 @@ function zwscp_entry()
 	fi
 
 	# 设置PATH_SCP
-	set_scp_path $2
+	set_scp_path $1
 
 	# 拷贝
-	scp -r $PATH_SCP .
+	scp -r $PATH_SCP/$2 .
 }
 
 zwscp_entry $@
