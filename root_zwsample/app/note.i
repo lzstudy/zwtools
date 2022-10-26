@@ -24,10 +24,9 @@ function sample_work()
 ########################################################################################################
 function sample_help()
 {
-    echo "root_index.rst   -    note root index"
+    echo "CMakeLists.txt   -    CmakeLists sample"
     echo "index.rst        -    note caption index"
     echo "test.rst         -    note text"
-    exit 1
 }
 
 ########################################################################################################
