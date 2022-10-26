@@ -1,36 +1,35 @@
-# 判断参数
-if [ $# -lt 2 ];then
-    echo "usage: zwg <-e/-s/-t> <file>"
-    exit 1
-fi
+#!/bin/bash
 
-source zwscp_config
+PATH_BASE=$(cd `dirname $0`; pwd)
+PATH_ROOT=${PATH_BASE}/root_zwscp
 
-# 参数
-ARG=$1
-FILE=$2
+source ${PATH_BASE}/.zwscp_config
+source ${PATH_ROOT}/zwscp
 
-# 待定参数
-PATH_SCP=
+########################################################################################################
+# 打印用法
+########################################################################################################
+function print_usage()
+{
+	echo "usage: zwget <-a/-s/-e/-t> <file>"
+}
 
-# 判断参数
-case $ARG in
-    -a)
-    PATH_SCP=$PATH_ZW/$FILE
-    ;;
+########################################################################################################
+# 程序入口
+########################################################################################################
+function zwscp_entry()
+{
+	# 打印用法
+	if [ $# -lt 2 ];then
+		print_uages
+	fi
 
-    -e)
-    PATH_SCP=$PATH_EMBED/$FILE
-    ;;
+	# 设置PATH_SCP
+	set_scp_path $2
 
-    -s)
-    PATH_SCP=$PATH_SERVE/$FILE
-    ;;
+	# 拷贝
+	scp -r $PATH_SCP .
+}
 
-    -t)
-    PATH_SCP=$PATH_TMP/$FILE
-    ;;
-esac
+zwscp_entry $@
 
-# 拷贝
-scp -r $PATH_SCP .
