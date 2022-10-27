@@ -8,7 +8,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # 设置目标名称
-set(target motor)
+set(target test)
  
 #指定工程名称
 project(${target})
@@ -30,19 +30,14 @@ set(libs pthread)
 
 # 添加头文件路径
 include_directories(${PROJECT_SOURCE_DIR})
-include_directories(${PROJECT_SOURCE_DIR}/../lib)
-include_directories(${PROJECT_SOURCE_DIR}/../lib/pin)
-include_directories(${PROJECT_SOURCE_DIR}/../lib/serial)
 
 # 添加源文件到 srcs
 aux_source_directory(${PROJECT_SOURCE_DIR} srcs)
-aux_source_directory(${PROJECT_SOURCE_DIR}/../lib/pin srcs)
-aux_source_directory(${PROJECT_SOURCE_DIR}/../lib/serial srcs)
 
 # 生成可执行文件
-#add_executable(${target} ${srcs})
-#target_link_libraries(${target} ${libs})
+add_executable(${target} ${srcs})
+target_link_libraries(${target} ${libs})
 
 # 生成动态库
-add_library(${target} SHARED ${srcs})
-target_link_libraries(${target} ${libs})
+#add_library(${target} SHARED ${srcs})
+#target_link_libraries(${target} ${libs})
