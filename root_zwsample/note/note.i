@@ -24,9 +24,12 @@ function sample_work()
 ########################################################################################################
 function sample_help()
 {
-    echo "root_index.rst   -    note root index"
-    echo "index.rst        -    note caption index"
-    echo "test.rst         -    note text"
+    echo "root_index.rst   -    root index"
+    echo "index.rst        -    caption index"
+    echo "base.rst         -    base note"
+    echo "hardware.rst     -    describe hardware note"
+    echo "subsys.rst       -    describe subsys note"
+    echo "driver.rst       -    driver note"
     exit 1
 }
 
