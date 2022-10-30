@@ -1,43 +1,24 @@
 #!/bin/bash
 
 PATH_BASE=$(cd `dirname $0`; pwd)
-PATH_ROOT=${PATH_BASE}/root_zwscp
-PATH_CFG=${PATH_BASE}/.config
-
-source ${PATH_CFG}/zwscp_config
-source ${PATH_ROOT}/zwscp
 
 ########################################################################################################
-# 打印用法
+# 别名初始化
 ########################################################################################################
-function print_usage()
+function alias_init()
 {
-	echo "usage: zwput <-a/-s/-e/-t> <file>"
+    ln -s zwput pt
+    ln -s zwget gt
+    ln -s zwsample sp
 }
 
 ########################################################################################################
 # 程序入口
 ########################################################################################################
-function zwscp_entry()
+function initzw_entry()
 {
-	# 如果是编辑SCP
-	if [ $1 = '-edit' ];then
-		vi ${PATH_BASE}/.zwscp_config
-		exit 1
-	fi
-
-	# 打印用法
-	if [ $# -lt 2 ];then
-		print_uages
-		exit 1
-	fi
-
-	# 设置PATH_SCP
-	set_scp_path $1
-
-	# 拷贝
-	scp -r $2 $PATH_SCP
+    # 起别名
+    alias_init
 }
 
-zwscp_entry $@
-
+initzw_entry
