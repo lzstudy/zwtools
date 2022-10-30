@@ -19,9 +19,16 @@ function print_usage()
 ########################################################################################################
 function zwscp_entry()
 {
+	# 如果是编辑SCP
+	if [ $1 = '-edit' ];then
+		vi ${PATH_BASE}/.zwscp_config
+		exit 1
+	fi
+
 	# 打印用法
 	if [ $# -lt 2 ];then
 		print_uages
+		exit 1
 	fi
 
 	# 设置PATH_SCP
