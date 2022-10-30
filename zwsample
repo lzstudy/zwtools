@@ -10,25 +10,116 @@ PATH_ROOT=${PATH_BASE}/root_zwsample
 # 获取模板CLASS
 SAMPLE_CLASS=$(ls -l ${PATH_ROOT} |awk '/^d/ {print $NF}')
 
-
 ########################################################################################################
-# 打印支持的模板
+# 帮助选项
 ########################################################################################################
 function print_usage()
 {
-	echo "usage : zwsample <class> <sample>"
-	echo "        zwsample -h <class>"
-	echo -n "class : "
+	echo "usage : sp <class> <sample>"
+	echo ""
+	echo "class list:"
 	echo ${SAMPLE_CLASS}
+	echo ""
+	echo "optioin list:"
+	echo "-cc    create class     sp -cc <class>"
+	echo "-cs    create sample    sp -cs <class> <sample> <describe>"
+	echo "-ss    sync sample      sp -ss <clsss> <sample>"
+	echo "-ls    list sample      sp -ls <class>"
+	echo "-es    edit sample      ps -es <class>"
 }
 
 
 ########################################################################################################
 # 更新模板
 ########################################################################################################
-function update_sample()
+function sync_sample()
 {
 	cp $2 ${PATH_ROOT}/$1 -rf
+}
+
+########################################################################################################
+# 创建模板
+########################################################################################################
+function create_class()
+{
+	mkdir -p ${PATH_ROOT}/$1
+	touch ${PATH_ROOT}/$1/note.sp
+}
+
+########################################################################################################
+# 创建sample
+########################################################################################################
+function create_sample()
+{
+	local STR_COUNT
+	local KEY
+	local INDEX
+	local CLASS
+	local SAMPLE
+
+	# 初始化变量
+	CLASS=$2
+	SAMPLE=$3
+
+	# 参数判断
+	if [ $# -lt 4 ];then
+		echo "create sample arg must > 4"
+		exit 1
+	fi
+
+	# 计算字符串数量
+	STR_COUNT=`expr $# - 3`
+
+	# 拼接模板名称
+	KEY+="$SAMPLE \""
+
+	# 拼接字符串
+	for i in $(seq $STR_COUNT)
+	do
+		INDEX=`expr $i + 3`
+		eval KEY+=$(echo \${${INDEX}})
+		KEY+=' '
+	done
+
+	KEY+=\"
+
+	# 创建文件
+	cp $SAMPLE ${PATH_ROOT}/$CLASS -rf
+
+	# 添加备注
+	echo $KEY >> ${PATH_ROOT}/$CLASS/note.sp
+}
+
+########################################################################################################
+# 显示模板
+########################################################################################################
+function list_sample()
+{
+	local KEY
+	local STR
+	local CLASS=$2
+	local FILE_SP=$PATH_ROOT/$CLASS/note.sp
+
+	# 读取文件
+	while read rows
+	do
+		KEY=`echo $rows | cut -d \" -f 1`
+		STR=`echo $rows | cut -d \" -f 2`
+		printf "%-10s" $KEY
+		echo $STR
+	done < $FILE_SP
+}
+
+
+########################################################################################################
+# 编辑模板
+########################################################################################################
+function edit_sample()
+{
+	local CLASS=$2
+	local FILE_SP=$PATH_ROOT/$CLASS/note.sp
+
+	vi $FILE_SP
 }
 
 ########################################################################################################
@@ -37,25 +128,42 @@ function update_sample()
 function zwsample_entry()
 {
 	# 如果参数个数小于2, 打印提示
-	if [ $# -lt 2 ];then
+	if [ $# = 0 ];then
     	print_usage $@
 		exit 1
 	fi
 
-	# 如果参数输入-h
-	if [ $1 = '-h' ];then
+	# 参数判断
+	case $1 in
+		-h)
 		print_usage $@
-		exit 1
-	fi
+		;;
 
-	# 如果参数输入-update,
-	if [ $1 = '-s' ];then
-		update_sample $2 $3
-		exit 1
-	fi
+		-cc)
+		create_class $@
+		;;
 
-	# 执行命令
-	${PATH_ROOT}/$1/note.i $2
+		-cs)
+		create_sample $@
+		;;
+
+		-ss)
+		sync_sample $@
+		;;
+
+		-ls)
+		list_sample $@
+		;;
+
+		-es)
+		edit_sample $@
+		;;
+
+		*)
+		${PATH_ROOT}/$1/note.i $2
+		;;
+		
+	esac
 }
 
 zwsample_entry $@
