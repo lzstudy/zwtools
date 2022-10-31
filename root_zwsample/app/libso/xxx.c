@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include "xxx_config.h"
 #include "xxx.h"
 
 /**************************************************************************************************
@@ -26,4 +27,17 @@ xxx_ops *get_xxx_ops(void)
 {
     return &_xxx_ops;
 }
+
+#if 0
+/**************************************************************************************************
+ * @brief  : 测试程序
+ * @param  : None
+ * @return : None
+**************************************************************************************************/
+int main(int argc, char const *argv[])
+{
+    get_xxx_ops()->init();
+    return 0;
+}
+#endif
 

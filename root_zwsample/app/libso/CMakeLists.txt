@@ -24,18 +24,17 @@ set(libs pthread)
 
 # 添加头文件路径
 include_directories(${PROJECT_SOURCE_DIR})
-include_directories(${PROJECT_SOURCE_DIR}/../../lib)
-include_directories(${PROJECT_SOURCE_DIR}/../../lib/pin)
-include_directories(${PROJECT_SOURCE_DIR}/../../lib/serial)
-include_directories(${PROJECT_SOURCE_DIR}/../../motor)
+# include_directories(${PROJECT_SOURCE_DIR}/../../lib)
 
 # 添加源文件到 srcs
 aux_source_directory(${PROJECT_SOURCE_DIR} srcs)
-aux_source_directory(${PROJECT_SOURCE_DIR}/../../lib srcs)
-aux_source_directory(${PROJECT_SOURCE_DIR}/../../lib/pin srcs)
-aux_source_directory(${PROJECT_SOURCE_DIR}/../../lib/serial srcs)
-aux_source_directory(${PROJECT_SOURCE_DIR}/../../motor srcs)
+# aux_source_directory(${PROJECT_SOURCE_DIR}/../../lib srcs)
 
 # 生成动态库
 add_library(${target} SHARED ${srcs})
+
+# 生成可执行文件
+# add_executable(${target} ${srcs})
+
+# 设置链接库
 target_link_libraries(${target} ${libs})
