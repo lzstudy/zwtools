@@ -160,7 +160,7 @@ function zwsample_entry()
 		;;
 
 		*)
-		${PATH_ROOT}/$1/note.i $2
+		cp -rf ${PATH_ROOT}/$1/$2 .
 		;;
 		
 	esac
