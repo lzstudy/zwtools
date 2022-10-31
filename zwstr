@@ -1,0 +1,133 @@
+#!/bin/bash
+
+################################################################################
+# zwstr help
+################################################################################
+function zwstr_replace_help()
+{
+    echo ""
+    echo "replace single file : zwstr <-rp1> <full-name> <abbr-name> <file>"
+    echo "replace project     : zwstr <-rp2> <full-name> <abbr-name> <dir>"
+}
+
+################################################################################
+# 替换 - 简单替换
+################################################################################
+function zwstr_replace0()
+{
+    OLD=$1
+    NEW=$2
+    FILE=$3
+
+    echo "$1 $2 $3"
+
+    sed -i "s/$1/$2/g" $FILE
+
+
+    # echo "$FULL_LOWER $ABBR_LOWER $FULL_UPPER $ABBR_UPPER"
+}
+
+################################################################################
+# 替换 - 替换sample(替换文件)
+#   规则说明:
+#       1) sample文件的全写使用xxx和XXX分别代表大小写
+#       2) sample文件的缩写使用yyy和YYY分别代表大小写
+#       2) 需要传入三个参数:全写替换, 缩写替换, 文件全路径  
+#   替换效果:
+#       sample文件中全写替换, 缩写被替换, 文件名被替换
+################################################################################
+function zwstr_replace1()
+{
+    # 小写
+    FULL_LOWER=$1
+    ABBR_LOWER=$2
+    FILE=$3
+
+    # 大写部分
+    FULL_UPPER=`echo $1 | tr a-z A-Z`
+    ABBR_UPPER=`echo $2 | tr a-z A-Z`
+
+    zwstr_replace0 xxx $FULL_LOWER $FILE
+    zwstr_replace0 XXX $FULL_UPPER $FILE
+    zwstr_replace0 yyy $ABBR_LOWER $FILE
+    zwstr_replace0 YYY $ABBR_UPPER $FILE
+}
+
+################################################################################
+# 替换 - 替换sample工程(文件夹所有文件替换)
+#   规则说明:
+#       1) sample文件的全写使用xxx和XXX分别代表大小写
+#       2) sample文件的缩写使用yyy和YYY分别代表大小写
+#       2) 需要传入三个参数:全写替换, 缩写替换, 文件全路径  
+#   替换效果:
+#       sample文件中全写替换, 缩写被替换, 文件名被替换
+################################################################################
+function zwstr_replace2()
+{
+    # 小写
+    FULL_LOWER=$1
+    ABBR_LOWER=$2
+    FILE=$3
+
+    # 大写部分
+    FULL_UPPER=`echo $1 | tr a-z A-Z`
+    ABBR_UPPER=`echo $2 | tr a-z A-Z`
+
+    sed -i "s/xxx/$FULL_LOWER/g" `grep xxx -rl $FILE` 2> /dev/null
+    sed -i "s/XXX/$FULL_UPPER/g" `grep XXX -rl $FILE` 2> /dev/null
+    sed -i "s/yyy/$ABBR_LOWER/g" `grep yyy -rl $FILE` 2> /dev/null
+    sed -i "s/YYY/$ABBR_UPPER/g" `grep YYY -rl $FILE` 2> /dev/null
+}
+
+################################################################################
+# 替换入口
+################################################################################
+function zwstr_replace()
+{
+    CMD=$1
+
+    case $CMD in
+
+    # 文本替换
+    -rp0)
+    zwstr_replace0 $2 $3 $4
+    ;;
+
+    -rp1)
+    zwstr_replace1 $2 $3 $4
+    ;;
+
+    -rp2)
+    zwstr_replace2 $2 $3 $4
+    ;;
+
+    *)
+    zwstr_replace_help
+    ;;
+
+    esac
+}
+
+################################################################################
+# 判断入口
+################################################################################
+function zwstr_start()
+{
+    CMD=$1
+
+    case $CMD in
+
+        # 普通文件替换
+        -rp*)
+        zwstr_replace $@
+        #zwstr_replace $2 $3 $4
+        ;;
+
+        *)
+        echo "unknown cmd $CMD"
+        ;;
+    esac
+}
+
+# 程序入口
+zwstr_start $@
