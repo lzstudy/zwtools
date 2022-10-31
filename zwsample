@@ -105,7 +105,7 @@ function list_sample()
 	do
 		KEY=`echo $rows | cut -d \" -f 1`
 		STR=`echo $rows | cut -d \" -f 2`
-		printf "%-10s" $KEY
+		printf "%-20s" $KEY
 		echo $STR
 	done < $FILE_SP
 }
