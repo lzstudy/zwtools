@@ -1,9 +1,3 @@
-#工程根目录(即为CMakeLists.txt文件所在目录)
-#message("PROJECT_SOURCE_DIR : " ${PROJECT_SOURCE_DIR})
-
-#编译目录(即为执行cmake的目录)
-#message("PROJECT_BINARY_DIR : " ${PROJECT_BINARY_DIR})
-
 #指定最低版本
 cmake_minimum_required(VERSION 3.10)
 
@@ -42,10 +36,6 @@ aux_source_directory(${PROJECT_SOURCE_DIR}/../../lib/pin srcs)
 aux_source_directory(${PROJECT_SOURCE_DIR}/../../lib/serial srcs)
 aux_source_directory(${PROJECT_SOURCE_DIR}/../../motor srcs)
 
-# 生成可执行文件
-add_executable(${target} ${srcs})
-target_link_libraries(${target} ${libs})
-
 # 生成动态库
-#add_library(${target} SHARED ${srcs})
-#target_link_libraries(${target} ${libs})
+add_library(${target} SHARED ${srcs})
+target_link_libraries(${target} ${libs})

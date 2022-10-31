@@ -1,2 +1,3 @@
-CMakeLists.txt "CMakeList sample "
-pin "zw app framework - pin"
+app/             "app sample"
+libso/           "lib so sample"
+framework_hal/   "hal framework"
