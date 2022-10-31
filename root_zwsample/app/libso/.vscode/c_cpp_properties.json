@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/../../lib",
+                "${workspaceFolder}/../../lib/pin",
+                "${workspaceFolder}/../../lib/serial",
+                "${workspaceFolder}/../../motor"
+            ],
+            "defines": [],
+            "compilerPath": "/opt/fsl-imx-xwayland/5.4-zeus/sysroots/x86_64-pokysdk-linux/usr/bin/clang",
+            "cStandard": "c17",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "linux-clang-x64"
+        }
+    ],
+    "version": 4
+}
