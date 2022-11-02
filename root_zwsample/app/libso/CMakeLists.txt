@@ -34,7 +34,7 @@ aux_source_directory(${PROJECT_SOURCE_DIR} srcs)
 add_library(${target} SHARED ${srcs})
 
 # 生成可执行文件
-# add_executable(${target} ${srcs})
+add_executable(main ${srcs})
 
 # 设置链接库
 target_link_libraries(${target} ${libs})

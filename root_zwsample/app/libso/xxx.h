@@ -1,6 +1,7 @@
 #ifndef __XXX_H__
 #define __XXX_H__
 __BEGIN_DECLS
+#include "xxx_type.h"
 
 typedef struct _xxx_ops {
     int (*init)(void);                                                          /**@ 初始化. */

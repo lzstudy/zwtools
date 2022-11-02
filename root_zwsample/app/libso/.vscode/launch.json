@@ -5,7 +5,7 @@
             "name": "gdb",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/_bin_out/main",
+            "program": "${workspaceRoot}/_build/main",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
