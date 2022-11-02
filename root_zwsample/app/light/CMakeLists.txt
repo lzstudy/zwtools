@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # 设置目标名称
-set(target main)
+set(target light)
  
 #指定工程名称
 project(${target})
@@ -24,14 +24,21 @@ set(libs pthread)
 
 # 添加头文件路径
 include_directories(${PROJECT_SOURCE_DIR})
-# include_directories(${PROJECT_SOURCE_DIR}/../../lib)
+include_directories(${PROJECT_SOURCE_DIR}/../framework)
+include_directories(${PROJECT_SOURCE_DIR}/../framework/pwm)
+include_directories(${PROJECT_SOURCE_DIR}/../framework/pin)
 
 # 添加源文件到 srcs
 aux_source_directory(${PROJECT_SOURCE_DIR} srcs)
-# aux_source_directory(${PROJECT_SOURCE_DIR}/../../lib srcs)
+aux_source_directory(${PROJECT_SOURCE_DIR}/../framework/ srcs)
+aux_source_directory(${PROJECT_SOURCE_DIR}/../framework/pwm srcs)
+aux_source_directory(${PROJECT_SOURCE_DIR}/../framework/pin srcs)
+
+# 生成动态库
+# add_library(${target} SHARED ${srcs})
 
 # 生成可执行文件
-add_executable(main ${srcs})
+add_executable(${target} ${srcs})
 
 # 设置链接库
 target_link_libraries(${target} ${libs})

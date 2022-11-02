@@ -1,3 +1,3 @@
 app/             "app sample"
-libso/           "lib so sample"
-framework_hal/   "hal framework"
+module/          "module sample, such as so app [zwstr]"
+fw_hal/          "hal framework"
