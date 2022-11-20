@@ -13,7 +13,7 @@ set(CMAKE_C_COMPILER ${CC})
 set(CMAKE_AR ${AR})
 
 # 设置编译选项
-add_compile_options(-std=gnu11 -Wall -g -O1)
+add_compile_options(-std=gnu11 -Wall -g -O0)
 #add_compile_options(-Werror)
 
 # 添加库路径
