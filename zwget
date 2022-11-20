@@ -8,34 +8,31 @@ source ${PATH_COOKIES}
 source ${PATH_ROOT}/zwscp
 
 ########################################################################################################
-# 打印用法
-########################################################################################################
-function print_usage()
-{
-	echo "usage: zwget <-a/-s/-e/-t> <file>"
-}
-
-########################################################################################################
 # 程序入口
 ########################################################################################################
 function zwscp_entry()
 {
-     # 如果是编辑SCP
-     if [ $1 = '-edit' ];then
-        vi ${PATH_COOKIES}
-        exit 1
-     fi
-
-	# 打印用法
-	if [ $# -lt 2 ];then
-		print_uages
+	# 如果没写参数
+	if [ $# = 0 ];then
+		print_usage
+		exit 1
 	fi
 
-	# 设置PATH_SCP
-	set_scp_path $1
+	# 如果是编辑SCP
+	if [ $1 = '-edit' ];then
+		vi ${PATH_COOKIES}
+		exit 1
+	fi
 
-	# 拷贝
-	scp -r $PATH_SCP/$2 .
+	# 如果只有一个参数
+	if [ $# = 1 ];then
+		scp -r $PATH_EMBED/$2
+		exit 1
+	fi
+
+	# 拷贝数据
+	set_scp_path $1
+	scp -r $PATH_SCP/$2
 }
 
 zwscp_entry $@
