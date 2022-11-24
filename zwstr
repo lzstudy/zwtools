@@ -44,19 +44,11 @@ function replace_sample_dir()
 ########################################################################################################
 function zwstr_entry()
 {
-	# 编辑此脚本
-	if [ $1 = '-edit' ];then
-		vi ${PATH_BASE}
-		exit 1
-	fi
-
-	# 打印用法
-	if [ $1 = -h ];then
-		print_usage
-		exit 1
-	fi
-
     case $1 in
+        -edit)
+        vi ${PATH_BASE}/zwstr
+        ;;
+
         -rsf)
         replace_sample_file $@
         ;;
@@ -66,6 +58,7 @@ function zwstr_entry()
         ;;
 
         *)
+        print_usage
         ;;
     esac
 }
