@@ -23,9 +23,9 @@ function print_usage()
 ########################################################################################################
 function alias_init()
 {
-    ln -s zwput pt
-    ln -s zwget gt
-    ln -s zwsample sp
+    ln -s $PATH_BASE/zwput $PATH_BASE/pt
+    ln -s $PATH_BASE/zwget $PATH_BASE/gt
+    ln -s $PATH_BASE/zwsample $PATH_BASE/sp
 }
 
 ########################################################################################################
@@ -58,4 +58,4 @@ function zwtool_entry()
 	esac    
 }
 
-zwtool_entry
+zwtool_entry $@
