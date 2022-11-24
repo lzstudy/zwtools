@@ -23,9 +23,9 @@ function print_usage()
 ########################################################################################################
 function alias_init()
 {
-    ln -s $PATH_BASE/zwput $PATH_BASE/pt
-    ln -s $PATH_BASE/zwget $PATH_BASE/gt
-    ln -s $PATH_BASE/zwsample $PATH_BASE/sp
+    ln -s $PATH_BASE/zwput $PATH_BASE/pt 2> /dev/null
+    ln -s $PATH_BASE/zwget $PATH_BASE/gt 2> /dev/null
+    ln -s $PATH_BASE/zwsample $PATH_BASE/sp 2> /dev/null
 }
 
 ########################################################################################################
