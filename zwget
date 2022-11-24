@@ -26,13 +26,13 @@ function zwscp_entry()
 
 	# 如果只有一个参数
 	if [ $# = 1 ];then
-		scp -r $PATH_EMBED/$1
+		scp -r $PATH_EMBED/$1 .
 		exit 1
 	fi
 
 	# 拷贝数据
 	set_scp_path $1
-	scp -r $PATH_SCP/$2
+	scp -r $PATH_SCP/$2 .
 }
 
 zwscp_entry $@
