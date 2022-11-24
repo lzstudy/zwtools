@@ -26,7 +26,7 @@ function zwscp_entry()
 
 	# 如果只有一个参数
 	if [ $# = 1 ];then
-		scp -r $2 $PATH_EMBED
+		scp -r $1 $PATH_EMBED
 		exit 1
 	fi
 
