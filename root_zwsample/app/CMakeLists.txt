@@ -15,6 +15,7 @@ set(CMAKE_AR ${AR})
 # 设置编译选项
 add_compile_options(-std=gnu11 -Wall -g -O0)
 #add_compile_options(-Werror)
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer)
 
 # 添加库路径
 # link_directories(${PROJECT_SOURCE_DIR})
