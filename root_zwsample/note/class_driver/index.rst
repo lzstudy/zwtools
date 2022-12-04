@@ -1,12 +1,10 @@
-test
+驱动 - 时钟
 ========================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
 
-   base
-   hardware
-   kconfig
-   subsys
-   driver
-   debug
+   info/index
+   core/index
+   bus/index
+   device/index
