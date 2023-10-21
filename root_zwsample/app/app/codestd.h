@@ -3,35 +3,39 @@
 #include <stdio.h>
 #include <stdint.h>
 
-/* 参数判断 */
-#define CHECK_PARAM_INFO(cond, val, fmt, ...) \
+/* 参数判断 - 带返回值 */
+#define CI_ARG(cond, val, fmt, ...) \
     do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); return val;}} while(0)
 
-#define CHECK_PARAM(cond, fmt, ...) \
+#define CK_ARG(cond, val) \
+    do {if(cond) {return val;}} while(0)
+
+/* 参数判断 - 不带返回值 */
+#define CI_NARG(cond, fmt, ...) \
      do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); return;}} while(0)
 
-#define CHECK_P(cond) \
-    do {if(cond) {return -1;}} while(0)
+#define CK_NARG(cond) \
+    do {if(cond) {return;}} while(0)
 
 /* 条件判断 - 带返回值 */
-#define CHECH_RET_INFO(cond, val, fmt, ...) \
+#define CI_RET(cond, val, fmt, ...) \
     do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); return val;}} while(0)
 
-#define CHECK_RET(cond, val) \
+#define CK_RET(cond, val) \
     do {if(cond) {return val;}} while(0)
 
 /* 条件判断 - 无返回值 */
-#define CHECH_NRET_INFO(cond, fmt, ...) \
+#define CI_NRET(cond, fmt, ...) \
     do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); return;}} while(0)
 
-#define CHECK_NRET(cond) \
+#define CK_NRET(cond) \
     do {if(cond) {return;}} while(0)
 
 /* 条件判断 - GOTO */
-#define CHECK_GOTO_INFO(cond, val, fmt, ...) \
+#define CI_GOTO(cond, val, fmt, ...) \
     do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); goto val;}} while(0)
 
-#define CHECK_GOTO(cond, val) \
+#define CK_GOTO(cond, val) \
     do {if(cond) {goto val;}} while(0)
 
 
