@@ -4,7 +4,7 @@
 1 系统原理
 ------------
 
-linux时钟体系由三部分构成 ``common clock framework``, ``clock provider``, ``clock consumer``。
+linux时钟体系由三部分构成 ``common clock framework``, ``clock provider``, ``clock consumer``
 
 .. image:: clock.jpg
 
@@ -15,10 +15,10 @@ linux时钟体系由三部分构成 ``common clock framework``, ``clock provider
 1.2 clock provider
 *********************
 
-根据时钟特点, ccf将时钟抽象为 ``fixed rate``, ``gate``, ``devider``, ``mux``, ``fixed factor``, ``composite``六类
+根据时钟特点, ccf将时钟抽象为 ``fixed rate``, ``gate``, ``devider``, ``mux``, ``fixed factor``, ``composite`` 六类
 使用数据结构clk_hw来描述
 
-.. code-block:: c
+.. code-block::
 
     struct clk_hw {
         struct clk_core *core;
