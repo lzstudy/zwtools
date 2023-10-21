@@ -18,6 +18,12 @@ function zwscp_entry()
 		exit 1
 	fi
 
+	# 或帮助命令, 则打印帮助信息
+	if [ $1 = '-h' ] || [ $1 = '--help' ];then
+		print_usage
+		exit 1
+	fi
+
 	# 设置SCP路径
 	set_scp_path $@
 
