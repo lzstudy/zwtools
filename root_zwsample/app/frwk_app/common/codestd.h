@@ -3,42 +3,41 @@
 #include <stdio.h>
 #include <stdint.h>
 
-/* 判断参数 */
-#define CHECK_PARAM(cond, val, fmt, ...) \
+/* 参数判断 - 带返回值 */
+#define CI_ARG(cond, val, fmt, ...) \
     do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); return val;}} while(0)
 
-#define CHECK_P(cond) \
-    do {if(cond) {return -1;}} while(0)
-
-#define CHECK_PARAM_EX(cond, fmt, ...) \
-     do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); return;}} while(0)
-
-/* 判断并退出 */
-#define CHECK_EXIST(cond, fmt, ...) \
-    do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); exit(1);}} while(0)
-
-/* 判断并返回 */
-#define CHECK_RET(cond, val, fmt, ...) \
-    do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); return val;}} while(0)
-
-#define _CHECK_RET(cond, val) \
+#define CK_ARG(cond, val) \
     do {if(cond) {return val;}} while(0)
 
-#define CHECK_RET_EX(cond, fmt, ...) \
-    do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); return;}} while(0)
+/* 参数判断 - 不带返回值 */
+#define CI_NARG(cond, fmt, ...) \
+     do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); return;}} while(0)
 
-#define _CHECK_RET_EX(cond) \
+#define CK_NARG(cond) \
     do {if(cond) {return;}} while(0)
 
-#define CHECK_R(cond, fmt) \
-    do {if(cond < 0) {printf(fmt" fail(%d)\n", -cond); return -cond;}} while(0)
+/* 条件判断 - 带返回值 */
+#define CI_RET(cond, val, fmt, ...) \
+    do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); return val;}} while(0)
 
-/* 判断并GOTO */
-#define CHECK_GOTO(cond, val, fmt, ...) \
+#define CK_RET(cond, val) \
+    do {if(cond) {return val;}} while(0)
+
+/* 条件判断 - 无返回值 */
+#define CI_NRET(cond, fmt, ...) \
+    do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); return;}} while(0)
+
+#define CK_NRET(cond) \
+    do {if(cond) {return;}} while(0)
+
+/* 条件判断 - GOTO */
+#define CI_GOTO(cond, val, fmt, ...) \
     do {if(cond) {printf(fmt"\n", ##__VA_ARGS__); goto val;}} while(0)
 
-#define CHECK_GOTO_EX(cond, val) \
+#define CK_GOTO(cond, val) \
     do {if(cond) {goto val;}} while(0)
+
 
 /* 打印信息 */
 #define LOG_I(fmt, ...)          printf(fmt"\n", ##__VA_ARGS__);

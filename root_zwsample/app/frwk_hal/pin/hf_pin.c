@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
-#include "pin.h"
+#include "hf_pin.h"
 #include "codestd.h"
 
 /**************************************************************************************************
@@ -17,7 +17,7 @@ static int _write_pin_file(const char *path, const char *val)
 
     /* 打开引脚属性文件 */
     fd = open(path, O_WRONLY);
-    CHECK_RET(fd < 0, fd, "write pin file open %s fail %d", path, fd);
+    CI_RET(fd < 0, fd, "write pin file open %s fail %d", path, fd);
 
     /* 写入数据 */
     ret = write(fd, val, strlen(val) + 1);
@@ -37,7 +37,7 @@ static inline int read_pin_file(const char *path, char *val)
 
     /* 打开引脚属性文件 */
     fd = open(path, O_RDONLY);
-    CHECK_RET(fd < 0, fd, "read pin file open %s fail %d", path, fd);
+    CI_RET(fd < 0, fd, "read pin file open %s fail %d", path, fd);
 
     /* 读取数据 */
     ret = read(fd, val, 16);
@@ -66,7 +66,7 @@ static inline int write_pin_file(const char *path, int val)
  * @param  : 引脚状态
  * @return : 0成功, 其他失败
  **************************************************************************************************/
-static int pin_init(int pin, pin_dir dir, pin_state state)
+static int hf_pin_init(int pin, pin_dir dir, pin_state state)
 {
     int ret;
     char buf[100];
@@ -77,12 +77,12 @@ static int pin_init(int pin, pin_dir dir, pin_state state)
     /* 设置方向 */
     sprintf(buf, "/sys/class/gpio/gpio%d/direction", pin);
     ret = _write_pin_file(buf, (dir ? "out" : "in"));
-    _CHECK_RET(ret < 0, ret);
+    CK_RET(ret < 0, ret);
 
     /* 设置初始电平 */
     sprintf(buf, "/sys/class/gpio/gpio%d/value", pin);
     ret = write_pin_file(buf, state);
-    _CHECK_RET(ret < 0, ret);
+    CK_RET(ret < 0, ret);
 
     return 0;
 }
@@ -92,7 +92,7 @@ static int pin_init(int pin, pin_dir dir, pin_state state)
  * @param  : 引脚ID
  * @return : 0成功, 其他失败
  **************************************************************************************************/
-static inline int pin_exit(int pin)
+static inline int hf_pin_exit(int pin)
 {
     return write_pin_file("/sys/class/gpio/unexport", pin);
 }
@@ -103,7 +103,7 @@ static inline int pin_exit(int pin)
  * @param  : 引脚状态
  * @return : 0成功, 其他失败
  **************************************************************************************************/
-static inline int pin_set(int pin, pin_state state)
+static inline int hf_pin_set(int pin, pin_state state)
 {
     char buf[100];
 
@@ -116,7 +116,7 @@ static inline int pin_set(int pin, pin_state state)
  * @param  : 引脚ID
  * @return : 0成功, 其他失败
  **************************************************************************************************/
-static inline int pin_get(int pin)
+static inline int hf_pin_get(int pin)
 {
     int ret;
     char buf[100], val[16];
@@ -124,16 +124,16 @@ static inline int pin_get(int pin)
     /* 读取文件 */
     sprintf(buf, "sys/class/gpio/gpio%d/value", pin);
     ret = read_pin_file(buf, val);
-    _CHECK_RET(ret < 0, ret);
+    CK_RET(ret < 0, ret);
 
     return atoi(val);
 }
 
-static pin_ops _pin_ops = {
-    .init = pin_init,
-    .exit = pin_exit,
-    .set  = pin_set,
-    .get  = pin_get,
+static hf_pin_ops _hf_pin_ops = {
+    .init = hf_pin_init,
+    .exit = hf_pin_exit,
+    .set  = hf_pin_set,
+    .get  = hf_pin_get,
 };
 
 /**************************************************************************************************
@@ -141,8 +141,8 @@ static pin_ops _pin_ops = {
  * @param  : None
  * @return : 0成功, 其他失败
  **************************************************************************************************/
-pin_ops *get_pin_ops(void)
+hf_pin_ops *get_hf_pin_ops(void)
 {
-    return &_pin_ops;
+    return &_hf_pin_ops;
 }
 
