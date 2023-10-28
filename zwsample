@@ -21,73 +21,8 @@ function print_usage()
 	echo ${SAMPLE_CLASS}
 	echo ""
 	echo "optioin list:"
-	echo "-cc    create class     sp -cc <class>"
-	echo "-cs    create sample    sp -cs <class> <sample> <describe>"
-	echo "-ss    sync sample      sp -ss <clsss> <sample>"
 	echo "-ls    list sample      sp -ls <class>"
-	echo "-es    edit sample      ps -es <class>"
-}
-
-
-########################################################################################################
-# 更新模板
-########################################################################################################
-function sync_sample()
-{
-	cp $3 ${PATH_ROOT}/$2 -rf
-}
-
-########################################################################################################
-# 创建模板
-########################################################################################################
-function create_class()
-{
-	mkdir -p ${PATH_ROOT}/$1
-	touch ${PATH_ROOT}/$1/note.sp
-}
-
-########################################################################################################
-# 创建sample
-########################################################################################################
-function create_sample()
-{
-	local STR_COUNT
-	local KEY
-	local INDEX
-	local CLASS
-	local SAMPLE
-
-	# 初始化变量
-	CLASS=$2
-	SAMPLE=$3
-
-	# 参数判断
-	if [ $# -lt 4 ];then
-		echo "create sample arg must > 4"
-		exit 1
-	fi
-
-	# 计算字符串数量
-	STR_COUNT=`expr $# - 3`
-
-	# 拼接模板名称
-	KEY+="$SAMPLE \""
-
-	# 拼接字符串
-	for i in $(seq $STR_COUNT)
-	do
-		INDEX=`expr $i + 3`
-		eval KEY+=$(echo \${${INDEX}})
-		KEY+=' '
-	done
-
-	KEY+=\"
-
-	# 创建文件
-	cp $SAMPLE ${PATH_ROOT}/$CLASS -rf
-
-	# 添加备注
-	echo $KEY >> ${PATH_ROOT}/$CLASS/note.sp
+	echo "-h     help"
 }
 
 ########################################################################################################
@@ -110,18 +45,6 @@ function list_sample()
 	done < $FILE_SP
 }
 
-
-########################################################################################################
-# 编辑模板
-########################################################################################################
-function edit_sample()
-{
-	local CLASS=$2
-	local FILE_SP=$PATH_ROOT/$CLASS/note.sp
-
-	vi $FILE_SP
-}
-
 ########################################################################################################
 # 模板入口
 ########################################################################################################
@@ -139,24 +62,8 @@ function zwsample_entry()
 		print_usage $@
 		;;
 
-		-cc)
-		create_class $@
-		;;
-
-		-cs)
-		create_sample $@
-		;;
-
-		-ss)
-		sync_sample $@
-		;;
-
 		-ls)
 		list_sample $@
-		;;
-
-		-es)
-		edit_sample $@
 		;;
 
 		*)
