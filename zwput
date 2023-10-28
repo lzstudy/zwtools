@@ -26,7 +26,7 @@ function zwscp_entry()
 
 	# 如果只有一个参数
 	if [ $# = 1 ];then
-		scp -r $1 $PATH_EMBED
+		cp -rf $1 $PATH_LOCAL
 		exit 1
 	fi
 
