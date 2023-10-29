@@ -36,6 +36,10 @@ function set_scp_path()
 		PATH_SCP=$PATH_EMBED/$2
 		;;
 
+		-u)
+		PATH_SCP=$PATH_UBUNTU/$2
+		;;
+
 		-t)
 		PATH_SCP=$PATH_TMP/$2
 		;;
