@@ -3,6 +3,7 @@
 # 待定参数
 PATH_SCP=
 PATH_ZW=root@120.48.82.24:/root/share
+PATH_DESKTOP=/mnt/c/Users/Administrator/Desktop
 
 ########################################################################################################
 # 打印用法
@@ -42,6 +43,10 @@ function set_scp_path()
 
 		-t)
 		PATH_SCP=$PATH_TMP/$2
+		;;
+
+		-d)
+		PATH_SCP=$PATH_DESKTOP/$2
 		;;
 
 		*)
