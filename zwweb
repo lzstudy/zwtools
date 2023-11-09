@@ -46,7 +46,9 @@ function make_index()
         fi
 
         # 插入到index.rst中的末尾
-        sed -i '$a\   '${ITEM}'' ${FILE_INDEX}        
+        if [[ $file != $EXC1 ]] && [[ $file != $EXC2 ]];then
+            sed -i '$a\   '${ITEM}'' ${FILE_INDEX}    
+        fi            
     done
 }
 
@@ -59,14 +61,14 @@ function sort_rename()
 
     for file in `ls .`
     do
-        CNT=$[$CNT + 1]                         # 序号+1
-        NAME=${file#*_}                         # 获取名字后缀
-        NUM=$(printf '%02d' "$CNT")             # 补0
-        new_file=${NUM}_${NAME}                 # 拼接新名字
+        CNT=$[$CNT + 1]                                         # 序号+1
+        NAME=${file#*_}                                         # 获取名字后缀
+        NUM=$(printf '%02d' "$CNT")                             # 补0
+        new_file=${NUM}_${NAME}                                 # 拼接新名字
 
         # 判断是否为排除的文件
-        if [[ $file != $EXCLUDE_FILE ]];then
-            mv $file $new_file 2> /dev/null     # 重命名
+        if [[ $file != $EXC1 ]] && [[ $file != $EXC2 ]];then
+            mv $file $new_file 2> /dev/null                     # 重命名
         fi
     done
 }
