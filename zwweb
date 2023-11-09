@@ -23,12 +23,21 @@ function print_usage()
 }
 
 ########################################################################################################
+# 编译网站
+########################################################################################################
+function build_web()
+{
+
+}
+
+########################################################################################################
 # index.rst文件处理
 ########################################################################################################
 function make_index()
 {
-    CNT=0
+    CNT=1
     ITEM=
+    
 
     rm $FILE_INDEX 2> /dev/null                 # 删除文件
     cp $FILE_SP_INDEX .                         # 拷贝参考文件
@@ -36,7 +45,7 @@ function make_index()
     # 读取所有文件, 判断是否为文件夹
     for file in `ls .`
     do
-        CNT=$[$CNT + 1]                         # 序号+1
+        FIRST=${file:0:1}                                       # 取文件首字母, 用于判断是否是数字
 
         # 判断文件还是目录
         if [[ ! -d $file ]];then
@@ -45,10 +54,11 @@ function make_index()
             ITEM=${file}/index
         fi
 
-        # 插入到index.rst中的末尾
-        if [[ $file != $EXC1 ]] && [[ $file != $EXC2 ]];then
+        # 如果是数字, 那么插入数据
+        if [ $(expr "$FIRST" + 0 2>/dev/null) ]; then
             sed -i '$a\   '${ITEM}'' ${FILE_INDEX}    
-        fi            
+            CNT=$[$CNT + 1]                                     # 序号+1
+        fi        
     done
 }
 
@@ -57,18 +67,19 @@ function make_index()
 ########################################################################################################
 function sort_rename()
 {
-    CNT=0
+    CNT=1
 
     for file in `ls .`
     do
-        CNT=$[$CNT + 1]                                         # 序号+1
         NAME=${file#*_}                                         # 获取名字后缀
         NUM=$(printf '%02d' "$CNT")                             # 补0
+        FIRST=${file:0:1}                                       # 取首字母
         new_file=${NUM}_${NAME}                                 # 拼接新名字
 
-        # 判断是否为排除的文件
-        if [[ $file != $EXC1 ]] && [[ $file != $EXC2 ]];then
+        # 如果是数字, 那么重新命名
+        if [ $(expr "$FIRST" + 0 2>/dev/null) ]; then
             mv $file $new_file 2> /dev/null                     # 重命名
+            CNT=$[$CNT + 1]                                     # 序号+1
         fi
     done
 }
@@ -78,14 +89,20 @@ function sort_rename()
 ########################################################################################################
 function zwweb_entry()
 {
+
+
 	# 参数判断
 	case $1 in
 		-h)
 		print_usage
 		;;
 
+        -b)
+        build_web
+        ;;
+
 		-i)
-		make_index $@
+		make_index
 		;;
 
 		-s)

@@ -16,7 +16,7 @@ function print_usage()
     echo "zwstr         str    str deal tool"
     echo "zwtrace       zt     ftrace tool"
     echo "zwpath        zp     path tool"
-    echo "zwweb         wb     zw web manage tool"
+    echo "zwweb         web    zw web manage tool"
 }
 
 ########################################################################################################
