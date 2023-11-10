@@ -41,7 +41,6 @@ function file_init()
 
     # 初始化scp
     if [ ! -e $PATH_BASE/.cookies/cookies_zwscp ]; then
-		echo "done"
         cp $PATH_BASE/root_zwsample/zwtools/sample_scp $PATH_BASE/.cookies/cookies_zwscp
     fi
 
