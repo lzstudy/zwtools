@@ -11,12 +11,12 @@ function print_usage()
     echo "----------    ----   --------------------"
     echo "zwput         pt     put file to ssh"
     echo "zwget         gt     get file from ssh"
-    echo "zwssh                ssh"
+    echo "zwssh         zsh    ssh"
     echo "zwsample      sp     get sample file"
     echo "zwstr         str    str deal tool"
     echo "zwtrace       zt     ftrace tool"
-    echo "zwpath        zp     path tool"
-    echo "zwweb         web    zw web manage tool"
+    echo "zwcd          zd     path tool"
+    echo "zwweb         wb     zw web manage tool"
 }
 
 ########################################################################################################
@@ -40,9 +40,16 @@ function file_init()
     mkdir -p $PATH_BASE/.cookies
 
     # 初始化scp
-    if [ ! -e $PATH_BASE/.cookies/zwsample ]; then
+    if [ ! -e $PATH_BASE/.cookies/cookies_zwscp ]; then
+		echo "done"
         cp $PATH_BASE/root_zwsample/zwtools/sample_scp $PATH_BASE/.cookies/cookies_zwscp
     fi
+
+	# 初始化zwcd
+	if [ ! -e $PATH_BASE/.cookies_zwcd/zd_list ]; then
+		mkdir -p $PATH_BASE/.cookies_zwcd
+		touch $PATH_BASE/.cookies_zwcd/zd_list
+	fi
 }
 
 ########################################################################################################
