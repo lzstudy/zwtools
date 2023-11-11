@@ -1,5 +1,5 @@
 #PATH_BASE=$(cd `dirname $0`; pwd)
-PATH_BASE=/home/zw/.zwbin/zwtools
+PATH_BASE=/root/.zwbin/zwtools
 PATH_ROOT=${PATH_BASE}/root_zwscp
 ZD_LIST=${PATH_BASE}/.cookies_zwcd/zd_list
 
