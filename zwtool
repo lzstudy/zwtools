@@ -48,6 +48,7 @@ function file_init()
 	if [ ! -e $PATH_BASE/.cookies_zwcd/zd_list ]; then
 		mkdir -p $PATH_BASE/.cookies_zwcd
 		touch $PATH_BASE/.cookies_zwcd/zd_list
+		touch $PATH_BASE/.cookies_zwcd/vague_list
 	fi
 }
 
