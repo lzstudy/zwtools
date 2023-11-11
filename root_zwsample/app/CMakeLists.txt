@@ -1,3 +1,8 @@
+####################################################
+# message("当前变量是：${dir}")
+# aux_source_directory(${PROJECT_SOURCE_DIR} srcs)	-	直接添加源文件
+####################################################
+
 #指定最低版本
 cmake_minimum_required(VERSION 3.10)
 
