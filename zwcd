@@ -72,29 +72,41 @@ function entry_dir()
 ########################################################################################################
 function entry_vague_dir()
 {
-    CNT=0
     DIR=
+    CNT=0
     TARGET=$(grep "$1" $VAGUE_LIST)
 
-    # 比较最后一个
-    for ITEM in ${TARGET}
+    # 如果没匹配到, 那么打印已有列表
+    if [ -z "$TARGET" ]; then
+        list_show $VAGUE_LIST
+        return
+    fi
+
+    # 将其转换为数组
+    arr=($TARGET)
+
+    # 如果只有一个路径匹配, 直接进入
+    if [[ $(echo ${#arr[@]}) == 1 ]];then
+        cd $TARGET
+        return
+    fi
+
+    # 优路径最末尾匹配
+    for ITEM in ${arr[@]}
     do
-        CNT=$[$CNT+1]
-
-        # 取路径最后的名字
-        LAST=$(echo ${var##*/})
-
-        if [[ $CNT == 1 ]];then
+        LAST=$(echo ${ITEM##*/})
+        if [[ $LAST == *${1}* ]];then
+            CNT=$[$CNT+1]
             DIR=$ITEM
-        fi
-
-        if [[ $LAST == *${1}* ]]; then
-            DIR=$ITEM
-            break
         fi
     done
 
-    cd $DIR
+    # 如果只匹配到一次, 则进入, 多次则打印
+    if [[ $CNT == 1 ]];then
+        cd $DIR
+    else
+        list_show $VAGUE_LIST
+    fi
 }
 
 ########################################################################################################
