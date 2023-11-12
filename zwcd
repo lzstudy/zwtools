@@ -1,5 +1,5 @@
 #PATH_BASE=$(cd `dirname $0`; pwd)
-PATH_BASE=/root/.zwbin/zwtools
+PATH_BASE=/home/zw/.zwbin/zwtools
 PATH_ROOT=${PATH_BASE}/root_zwscp
 ZD_LIST=${PATH_BASE}/.cookies_zwcd/zd_list
 VAGUE_LIST=${PATH_BASE}/.cookies_zwcd/vague_list
@@ -56,8 +56,6 @@ function list_show()
     cat -n $1
 }
 
-
-
 ########################################################################################################
 # 进入路径
 ########################################################################################################
@@ -105,7 +103,11 @@ function entry_vague_dir()
     if [[ $CNT == 1 ]];then
         cd $DIR
     else
-        list_show $VAGUE_LIST
+		echo -e "\033[33mMultiple dir match please retry! \033[0m"
+    	for ITEM in ${arr[@]}
+		do
+			echo $ITEM
+		done
     fi
 }
 
