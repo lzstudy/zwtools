@@ -17,6 +17,7 @@ function print_usage()
     echo "zwtrace       zt     ftrace tool"
     echo "zwcd          zd     path tool"
     echo "zwweb         wb     zw web manage tool"
+    echo "zwtar         ztar   zw tar tool"
 }
 
 ########################################################################################################
@@ -30,6 +31,7 @@ function alias_init()
     ln -s $PATH_BASE/zwssh $PATH_BASE/zsh 2> /dev/null
     ln -s $PATH_BASE/zwweb $PATH_BASE/web 2> /dev/null
     ln -s $PATH_BASE/zwstr $PATH_BASE/str 2> /dev/null
+    ln -s $PATH_BASE/zwtar $PATH_BASE/ztar 2> /dev/null
 }
 
 ########################################################################################################
