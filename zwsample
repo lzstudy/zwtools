@@ -24,7 +24,6 @@ function print_usage()
 	echo "-h     help"
 	echo "-ls    list sample      sp -ls <class>"
 	echo "-rp    replace key      sp -rp <dir/file> <key>"
-	
 }
 
 ########################################################################################################

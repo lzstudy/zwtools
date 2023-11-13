@@ -1,0 +1,45 @@
+# 获取脚本所在目录
+PATH_BASE=$(cd `dirname $0`; pwd)
+PATH_COOKIES=${PATH_BASE}/.cookies/cookies_mv
+
+########################################################################################################
+# 帮助选项
+########################################################################################################
+function print_usage()
+{
+	echo "usage : sp <class> <sample>"
+	echo ""
+	echo "class list:"
+	echo ${SAMPLE_CLASS}
+	echo ""
+	echo "optioin list:"
+	echo "-h     help"
+	echo "-ls    list sample      sp -ls <class>"
+	echo "-rp    replace key      sp -rp <dir/file> <key>"
+}
+
+########################################################################################################
+# 程序入口
+########################################################################################################
+function zwcp_entry()
+{
+	case $1 in
+		-h)
+		print_usage $@
+		;;
+
+		-ls)
+		list_sample $@
+		;;
+
+		-rp)
+		replace_key $2 $3
+		;;
+
+		*)
+		cp -rf ${PATH_ROOT}/$1/$2 .
+		;;
+	esac
+}
+
+zwcp_entry $@
