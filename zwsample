@@ -21,8 +21,10 @@ function print_usage()
 	echo ${SAMPLE_CLASS}
 	echo ""
 	echo "optioin list:"
-	echo "-ls    list sample      sp -ls <class>"
 	echo "-h     help"
+	echo "-ls    list sample      sp -ls <class>"
+	echo "-rp    replace key      sp -rp <dir/file> <key>"
+	
 }
 
 ########################################################################################################
@@ -46,6 +48,42 @@ function list_sample()
 }
 
 ########################################################################################################
+# 替换关键信息, 会替换xxx 和 XXX，文件夹名, 文件夹名
+########################################################################################################
+function replace_key()
+{
+	FILE=$1
+	KEY=$2
+
+	if [ -z $1 ] || [ -z $2 ];then
+		echo "sp -rp <dir> <key>"
+	fi
+
+	# 配置大小写
+	LOWER=$2
+	UPPER=`echo $2 | tr a-z A-Z`
+
+	# 截取后缀
+	sed -i "s/xxx/$LOWER/g" `grep xxx -rl $FILE` 2> /dev/null
+	sed -i "s/XXX/$UPPER/g" `grep XXX -rl $FILE` 2> /dev/null
+
+	# 文件替换
+	if [[ ! -d $FILE ]];then
+		NEW_NAME=$(echo ${FILE/xxx/$LOWER})
+		mv $FILE $NEW_NAME
+	else
+		RESULT=$(find $FILE -name "xxx*")
+		arr=($RESULT)
+
+		for ITEM in ${arr[@]}
+		do
+			NEW_NAME=$(echo ${ITEM/xxx/$LOWER})
+			mv $ITEM $NEW_NAME
+		done
+	fi
+}
+
+########################################################################################################
 # 模板入口
 ########################################################################################################
 function zwsample_entry()
@@ -64,6 +102,10 @@ function zwsample_entry()
 
 		-ls)
 		list_sample $@
+		;;
+
+		-rp)
+		replace_key $2 $3
 		;;
 
 		*)
