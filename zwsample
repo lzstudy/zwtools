@@ -80,6 +80,8 @@ function replace_key()
 			NEW_NAME=$(echo ${ITEM/xxx/$LOWER})
 			mv $ITEM $NEW_NAME
 		done
+
+		mv $FILE $KEY
 	fi
 }
 
