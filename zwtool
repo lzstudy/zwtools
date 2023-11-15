@@ -1,6 +1,7 @@
 #!/bin/bash
 
 PATH_BASE=$(cd `dirname $0`; pwd)
+PATH_COOKIES=$PATH_BASE/.cookies
 
 ########################################################################################################
 # 打印使用方法
@@ -32,6 +33,7 @@ function alias_init()
     ln -s $PATH_BASE/zwweb $PATH_BASE/web 2> /dev/null
     ln -s $PATH_BASE/zwstr $PATH_BASE/str 2> /dev/null
     ln -s $PATH_BASE/zwtar $PATH_BASE/ztar 2> /dev/null
+    ln -s $PATH_BASE/zwcp $PATH_BASE/zcp 2> /dev/null
 }
 
 ########################################################################################################
@@ -52,6 +54,11 @@ function file_init()
 		mkdir -p $PATH_BASE/.cookies_zwcd
 		touch $PATH_BASE/.cookies_zwcd/zd_list
 		touch $PATH_BASE/.cookies_zwcd/vague_list
+	fi
+
+	# 初始化COOKIES
+	if [ ! -e $PATH_COOKIES ]; then
+		touch $PATH_COOKIES/cookies_zwcp
 	fi
 }
 

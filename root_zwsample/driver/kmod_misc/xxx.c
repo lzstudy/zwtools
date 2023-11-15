@@ -3,20 +3,25 @@
 #include <linux/device.h>
 #include <linux/of_platform.h>
 #include <linux/of_device.h>
+#include <linux/of_gpio.h>
+#include <linux/of_irq.h>
 #include <linux/miscdevice.h>
 #include <linux/uaccess.h>
+#include <linux/interrupt.h>
 #include <linux/fs.h>
-#include "codestd.h"
+#include "ckerr.h"
 
 typedef struct _xxx_priv {
-	struct miscdevice dev;															/**@ misc设备. */
+	int pin;																	/**@ 引脚. */
+	int irq;																	/**@ 中断号. */
+	struct miscdevice dev;														/**@ misc设备. */
 }xxx_priv;
 
 /* IOC define */
-#define	IOC_TEST				_IOR(0x21, 0, int)									/**< 等待事件. */
+#define	IOC_TEST				_IOR(0x21, 0, int)								/**< 等待事件. */
 
 /* 上下文宏 */
-#define to_xxx_priv(x)			container_of(x, xxx_priv, dev)				/**< 获取设备信息. */
+#define to_xxx_priv(x)			container_of(x, xxx_priv, dev)					/**< 获取设备信息. */
 
 /**************************************************************************************************
  * @brief  : 接口 - open
@@ -151,8 +156,65 @@ static struct attribute_group xxx_attr_group = {
 };
 
 /**************************************************************************************************
- * @brief  : 光电开关设备匹配
+ * @brief  : 解析设备树
+ * @param  : 私有数据
+ * @param  : 设备节点
+ * @return : 0成功, -1失败
+**************************************************************************************************/
+static int parse_dtb(xxx_priv *priv, struct device *dev, struct device_node *np)
+{
+	/* 获取引脚 */
+	priv->pin = of_get_named_gpio(np, "gpios", 0);
+	DS_RET(priv->pin, of_get_named_gpio);
+
+	/* 获取中断号 */
+	priv->irq = gpio_to_irq(priv->pin);
+	DS_RET(priv->pin, gpio_to_irq);
+	return 0;
+}
+
+/**************************************************************************************************
+ * @brief  : 中断处理函数
+ * @param  : 中断号
+ * @param  : 私有数据
+ * @return : 0成功, -1失败
+**************************************************************************************************/
+static irqreturn_t xxx_irq_handler(int irq, void *data)
+{
+	xxx_priv *priv = (xxx_priv *)data;
+
+	int val = gpio_get_value(priv->pin);
+	LOG_I("xxx irq %d", val);
+	return IRQ_RETVAL(IRQ_HANDLED);
+}
+
+/**************************************************************************************************
+ * @brief  : 设置硬件属性
  * @param  : 设备
+ * @return : 0成功, -1失败
+**************************************************************************************************/
+static int set_hardware(xxx_priv *priv, struct device *dev)
+{
+	int ret;
+
+	/* 申请GPIO */
+	ret = devm_gpio_request(dev, priv->pin, "xxx-pin");
+	DS_RET(ret, devm_gpio_request);
+
+	/* 设置输出 */
+	ret = gpio_direction_input(priv->pin);
+	DS_RET(ret, gpio_direction_input);
+
+	/* 设置中断 */
+	ret = devm_request_irq(dev, priv->irq, xxx_irq_handler, IRQF_TRIGGER_FALLING|IRQF_TRIGGER_RISING, "xxx-irq", priv);
+	DS_RET(ret, devm_request_irq);
+
+	return 0;
+}
+
+/**************************************************************************************************
+ * @brief  : 驱动匹配
+ * @param  : 平台设备
  * @return : 0成功, -1失败
 **************************************************************************************************/
 static int xxx_probe(struct platform_device *pdev)
@@ -163,24 +225,32 @@ static int xxx_probe(struct platform_device *pdev)
 
 	/* 申请内存空间 */
 	priv = devm_kzalloc(dev, sizeof(xxx_priv), GFP_KERNEL);
-	CI_RET(!priv, -ENOMEM, "xxx alloc fail");
+	DI_RET(dev, !priv, -ENOMEM, "devm_kzalloc fail");
 
 	/* 初始化MISC设备 */
 	priv->dev.name  = "xxx";
 	priv->dev.minor = MISC_DYNAMIC_MINOR;
 	priv->dev.fops  = &xxx_fops;
+
+	/* 解析设备树 */
+	ret = parse_dtb(priv, dev, dev->of_node);
+	CK_RET(ret < 0, ret);
+
+	/* 设置硬件 */
+	ret = set_hardware(priv, dev);
+	CK_RET(ret < 0, ret);
 	
 	/* 注册MISC设备 */
 	ret = misc_register(&priv->dev);
-	CI_RET(ret < 0, ret, "xxx misc register fail %d", ret);
+	DS_RET(ret, misc_register);
 
 	/* 创建属性文件 */
 	ret = sysfs_create_group(&priv->dev.this_device->kobj, &xxx_attr_group);
-	CI_RET(ret < 0, ret, "create light switch attr group fail %d", ret);
+	DS_RET(ret, sysfs_create_group);
 
 	/* 保存私有数据 */
 	platform_set_drvdata(pdev, priv);
-	LOG_I("xxx init success\n");
+	LOG_I("xxx init");
 	return 0;
 }
 
@@ -198,7 +268,7 @@ static int xxx_remove(struct platform_device *pdev)
 
 	/* 注销MISC设备 */
 	misc_deregister(&priv->dev);
-	LOG_I("xxx remove\n");
+	LOG_I("xxx remove");
 	return 0;
 }
 
