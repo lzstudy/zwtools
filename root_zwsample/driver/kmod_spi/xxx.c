@@ -9,19 +9,19 @@
 #include <linux/uaccess.h>
 #include <linux/interrupt.h>
 #include <linux/fs.h>
+#include <linux/spi/spi.h>
 #include "ckerr.h"
 
 typedef struct _xxx_priv {
 	int pin;																	/**@ 引脚. */
 	int irq;																	/**@ 中断号. */
-	struct miscdevice dev;														/**@ misc设备. */
+	struct miscdevice misc;														/**@ misc设备. */
 }xxx_priv;
 
 /* IOC define */
 #define	IOC_TEST				_IOR(0x21, 0, int)								/**< 等待事件. */
-
-/* 上下文宏 */
-#define to_xxx_priv(x)			container_of(x, xxx_priv, dev)					/**< 获取设备信息. */
+#define IRQ_TRIGGER_BOTH        (IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING)	/**< 双边沿. */	
+#define to_xxx_priv(x)			container_of(x, xxx_priv, misc)					/**< 获取设备信息. */
 
 /**************************************************************************************************
  * @brief  : 接口 - open
@@ -31,7 +31,8 @@ typedef struct _xxx_priv {
 **************************************************************************************************/
 static int xxx_open(struct inode *inode, struct file *filp)
 {
-	xxx_priv *priv = to_xxx_priv(filp->private_data);
+	xxx_priv *priv = spi_get_drvdata(filp->private_data);
+
 	LOG_I("priv addr = %p", priv);
 	LOG_I("xxx open");
 	return 0;
@@ -163,29 +164,12 @@ static struct attribute_group xxx_attr_group = {
 **************************************************************************************************/
 static int parse_dtb(xxx_priv *priv, struct device *dev, struct device_node *np)
 {
+#if 0
 	/* 获取引脚 */
 	priv->pin = of_get_named_gpio(np, "gpios", 0);
 	DS_RET(priv->pin, of_get_named_gpio);
-
-	/* 获取中断号 */
-	priv->irq = gpio_to_irq(priv->pin);
-	DS_RET(priv->pin, gpio_to_irq);
+#endif
 	return 0;
-}
-
-/**************************************************************************************************
- * @brief  : 中断处理函数
- * @param  : 中断号
- * @param  : 私有数据
- * @return : 0成功, -1失败
-**************************************************************************************************/
-static irqreturn_t xxx_irq_handler(int irq, void *data)
-{
-	xxx_priv *priv = (xxx_priv *)data;
-
-	int val = gpio_get_value(priv->pin);
-	LOG_I("xxx irq %d", val);
-	return IRQ_RETVAL(IRQ_HANDLED);
 }
 
 /**************************************************************************************************
@@ -195,6 +179,7 @@ static irqreturn_t xxx_irq_handler(int irq, void *data)
 **************************************************************************************************/
 static int set_hardware(xxx_priv *priv, struct device *dev)
 {
+#if 0
 	int ret;
 
 	/* 申请GPIO */
@@ -204,11 +189,7 @@ static int set_hardware(xxx_priv *priv, struct device *dev)
 	/* 设置输出 */
 	ret = gpio_direction_input(priv->pin);
 	DS_RET(ret, gpio_direction_input);
-
-	/* 设置中断 */
-	ret = devm_request_irq(dev, priv->irq, xxx_irq_handler, IRQF_TRIGGER_FALLING|IRQF_TRIGGER_RISING, "xxx-irq", priv);
-	DS_RET(ret, devm_request_irq);
-
+#endif 
 	return 0;
 }
 
@@ -217,20 +198,20 @@ static int set_hardware(xxx_priv *priv, struct device *dev)
  * @param  : 平台设备
  * @return : 0成功, -1失败
 **************************************************************************************************/
-static int xxx_probe(struct platform_device *pdev)
+static int xxx_probe(struct spi_device *spi)
 {
 	int ret;
 	xxx_priv *priv;
-	struct device *dev = &pdev->dev;
+	struct device *dev = &spi->dev;
 
 	/* 申请内存空间 */
 	priv = devm_kzalloc(dev, sizeof(xxx_priv), GFP_KERNEL);
 	DP_RET(priv, devm_kzalloc);
 
 	/* 初始化MISC设备 */
-	priv->dev.name  = "xxx";
-	priv->dev.minor = MISC_DYNAMIC_MINOR;
-	priv->dev.fops  = &xxx_fops;
+	priv->misc.name  = "xxx";
+	priv->misc.minor = MISC_DYNAMIC_MINOR;
+	priv->misc.fops  = &xxx_fops;
 
 	/* 解析设备树 */
 	ret = parse_dtb(priv, dev, dev->of_node);
@@ -241,7 +222,7 @@ static int xxx_probe(struct platform_device *pdev)
 	CK_RET(ret < 0, ret);
 	
 	/* 注册MISC设备 */
-	ret = misc_register(&priv->dev);
+	ret = misc_register(&priv->misc);
 	DS_RET(ret, misc_register);
 
 	/* 创建属性文件 */
@@ -249,7 +230,7 @@ static int xxx_probe(struct platform_device *pdev)
 	DS_RET(ret, sysfs_create_group);
 
 	/* 保存私有数据 */
-	platform_set_drvdata(pdev, priv);
+	spi_set_drvdata(spi, priv);
 	LOG_I("xxx init");
 	return 0;
 }
@@ -259,35 +240,33 @@ static int xxx_probe(struct platform_device *pdev)
  * @param  : 设备
  * @return : 0成功, -1失败
 **************************************************************************************************/
-static int xxx_remove(struct platform_device *pdev)
+static int xxx_remove(struct spi_device *spi)
 {
-	xxx_priv *priv = platform_get_drvdata(pdev);
+	xxx_priv *priv = spi_get_drvdata(spi);
 
-	/* 移除属性 */
-	sysfs_remove_group(&pdev->dev.kobj, &xxx_attr_group);
-
-	/* 注销MISC设备 */
-	misc_deregister(&priv->dev);
+	/* 删除属性, 并注销设备 */
+	sysfs_remove_group(&spi->dev.kobj, &xxx_attr_group);
+	misc_deregister(&priv->misc);
 	LOG_I("xxx remove");
 	return 0;
 }
 
 static const struct of_device_id xxx_match[] = {
-	{ .compatible = "xxx" },
+	{ .compatible = "xxx-spi" },
 	{},
 };
-MODULE_DEVICE_TABLE(of, xxx_match);
 
-static struct platform_driver xxx_driver = {
+static struct spi_driver xxx_driver = {
     .probe  = xxx_probe,
     .remove = xxx_remove,
 	.driver	= {
-		.name = "xxx",
-		.of_match_table = of_match_ptr(xxx_match),
+		.owner = THIS_MODULE,
+		.name = "xxx-spi",
+		.of_match_table = xxx_match,
 	},
 };
 
-module_platform_driver(xxx_driver);
+module_spi_driver(xxx_driver);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("ZW");
