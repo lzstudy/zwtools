@@ -47,7 +47,7 @@ function zwcp_entry()
 		;;
 
 		*)										
-		echo "cp $PWD/$1 ." > $PATH_COOKIES		# 将文件写入cookies - cp
+		echo "cp -rf $PWD/$1 ." > $PATH_COOKIES		# 将文件写入cookies - cp
 		;;
 	esac
 }
