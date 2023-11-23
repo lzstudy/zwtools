@@ -2,6 +2,7 @@
 PATH_BASE=/home/zw/.zwbin/zwtools
 PATH_ROOT=${PATH_BASE}/root_zwscp
 ZD_LIST=${PATH_BASE}/.cookies_zwcd/zd_list
+VAGUE_LIST=${PATH_BASE}/.cookies_zwcd/vague_list
 
 
 ########################################################################################################
@@ -71,11 +72,11 @@ function entry_vague_dir()
 {
     DIR=
     CNT=0
-    TARGET=$(grep "$1" $ZD_LIST)
+    TARGET=$(grep "$1" $VAGUE_LIST)
 
     # 如果没匹配到, 那么打印已有列表
     if [ -z "$TARGET" ]; then
-        list_show $ZD_LIST
+        list_show $VAGUE_LIST
         return
     fi
 
@@ -138,6 +139,22 @@ function zwcd_entry()
 
             [1-9])
             entry_dir $1
+            ;;
+
+            '+')
+            list_add $VAGUE_LIST
+            ;;
+
+            -dv)
+            list_sub $VAGUE_LIST $2
+            ;;
+
+            -cv)
+            list_clr $VAGUE_LIST
+            ;;
+
+            -l)
+            list_show $VAGUE_LIST
             ;;
 
             *)

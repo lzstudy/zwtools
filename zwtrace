@@ -8,7 +8,7 @@ KP_EVENT=$TRACE_ROOT/kprobe_events
 KP_ENABLE=$TRACE_ROOT/events/kprobes/enable
 
 # support tracer
-tracer=(function function_graph)
+tracer=(function function_graph kprobe)
 
 ########################################################################################################
 # usage help
@@ -48,12 +48,16 @@ function zwtrace_init()
 ########################################################################################################
 function zwtrace_flow()
 {
-    echo "------------------------------------"
+    echo "------------------ ftrace ------------------"
     echo "[1]   kt -init                # init ftrace soft"
     echo "[2]   kt -t 0/1/...           # set tracer type"
     echo "[3]   kt -s pid/func          # set filter"
     echo "[4]   kt                      # dispaly trace"
-    echo "------------------------------------"
+    echo "------------------ kprobe ------------------"
+    echo "[1]   kt -kp fun              # set kprobe"
+    echo "[1]   kt -kp -k/-j/-r fun     # set kprobe/jprobe/retprobe"
+    echo "[1]   kt -kp                  # lookup current kprobe"
+    echo "---------------------------------------------"
 }
 
 
@@ -130,12 +134,48 @@ function zt_set_gd()
 
 ########################################################################################################
 # 设置kprobe
+# kt -kp fun
+# kt -kp -k/-j/-r fun
 ########################################################################################################
-function zt_set_kp()
+function zwtrace_set_kprobe()
 {
-    echo 0 > $KP_ENABLE 2>/dev/null
-    echo "p:zwj $2 arg0=%r0 arg1=%r1 arg2=%r2 arg3=%r3" >> $KP_EVENT
-    echo "r:zwr $2 ret=\$retval" >> $KP_EVENT
+    if [ $# = 1 ];then
+        cat $KP_EVENT
+        return
+    fi
+
+    # 设置nop tracer
+    # echo nop > $TRACE_ROOT/current_tracer
+
+    # 如果只有两个参数, 则默认kprobe
+    if [ $# = 2 ];then
+        echo "p:$2 $2" >> $KP_EVENT
+        echo 1 > $KP_ENABLE
+        return
+    fi
+
+
+    PROBE=
+
+    # 如果有3个参数, 表示希望同时用k/j/r probe
+    case $2 in
+        -k)
+        PROBE=$3_k
+        echo "p:$PROBE $3" >> $KP_EVENT
+        ;;
+
+        -j)
+        PROBE=$3_j
+        echo "p:$JPROBE $2 arg0=%r0 arg1=%r1 arg2=%r2 arg3=%r3" >> $KP_EVENT
+        ;;
+
+        -r)
+        PROBE=$3_r
+        echo "r:$RPROBE $2 ret=\$retval" >> $KP_EVENT
+        ;;
+    esac
+    
+    # 使能全部探针
     echo 1 > $KP_ENABLE
 }
 
@@ -145,6 +185,7 @@ function zt_set_kp()
 function zwtrace_set_tracer()
 {
     CNT=0
+    TRACER=
 
     # 如果没有参数, 则打印支持的tracer
     if [ $# = 1 ];then
@@ -156,7 +197,15 @@ function zwtrace_set_tracer()
         exit
     fi
 
-    echo ${tracer[$2]} > $TRACE_ROOT/current_tracer
+    case $2 in 
+        2)
+        echo nop > $TRACE_ROOT/current_tracer
+        ;;
+
+        *)
+        echo ${tracer[$2]} > $TRACE_ROOT/current_tracer
+        ;;
+    esac
 }
 
 ########################################################################################################
@@ -245,7 +294,7 @@ function zwtrace_entry()
         ;;
 
         -kp)
-        zt_set_kp $@
+        zwtrace_set_kprobe $@
         ;;
 
         *)
