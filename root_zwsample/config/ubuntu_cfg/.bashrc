@@ -122,6 +122,9 @@ export PATH=$PATH:~/.zwbin/					# 自己的BIN路径
 export PATH=$PATH:~/.zwbin/zwtools			# 自己的BIN路径
 export PATH=$PATH:~/.zwbin/zwtools/bin		# 自己的BIN路径
 
+###################################### ALIA PART ######################################
+alias kd='source zwcd'
+
 ###################################### ZW APPEND ######################################
 # Show git branch name
 force_color_prompt=yes
