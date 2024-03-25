@@ -12,13 +12,13 @@ function print_usage()
     echo "----------    ----   --------------------"
     echo "zwput         pt     put file to ssh"
     echo "zwget         gt     get file from ssh"
-    echo "zwssh         zsh    ssh"
+    echo "zwssh         ksh    ssh"
     echo "zwsample      sp     get sample file"
     echo "zwstr         str    str deal tool"
-    echo "zwtrace       zt     ftrace tool"
-    echo "zwcd          zd     path tool"
+    echo "zwtrace       kt     ftrace tool"
+    echo "zwcd          kd     path tool"
     echo "zwweb         wb     zw web manage tool"
-    echo "zwtar         ztar   zw tar tool"
+    echo "zwtar         ktar   zw tar tool"
 }
 
 ########################################################################################################
@@ -29,11 +29,11 @@ function alias_init()
     ln -s $PATH_BASE/zwput $PATH_BASE/pt 2> /dev/null
     ln -s $PATH_BASE/zwget $PATH_BASE/gt 2> /dev/null
     ln -s $PATH_BASE/zwsample $PATH_BASE/sp 2> /dev/null
-    ln -s $PATH_BASE/zwssh $PATH_BASE/zsh 2> /dev/null
+    ln -s $PATH_BASE/zwssh $PATH_BASE/ksh 2> /dev/null
     ln -s $PATH_BASE/zwweb $PATH_BASE/web 2> /dev/null
     ln -s $PATH_BASE/zwstr $PATH_BASE/str 2> /dev/null
-    ln -s $PATH_BASE/zwtar $PATH_BASE/ztar 2> /dev/null
-    ln -s $PATH_BASE/zwcp $PATH_BASE/zcp 2> /dev/null
+    ln -s $PATH_BASE/zwtar $PATH_BASE/ktar 2> /dev/null
+    ln -s $PATH_BASE/zwcp $PATH_BASE/kcp 2> /dev/null
 }
 
 ########################################################################################################
