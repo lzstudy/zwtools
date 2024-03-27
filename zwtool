@@ -34,6 +34,7 @@ function alias_init()
     ln -s $PATH_BASE/zwstr $PATH_BASE/str 2> /dev/null
     ln -s $PATH_BASE/zwtar $PATH_BASE/ktar 2> /dev/null
     ln -s $PATH_BASE/zwcp $PATH_BASE/kcp 2> /dev/null
+    ln -s $PATH_BASE/zwpp $PATH_BASE/kpp 2> /dev/null
 }
 
 ########################################################################################################
