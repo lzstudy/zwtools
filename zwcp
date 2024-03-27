@@ -7,15 +7,14 @@ PATH_COOKIES=${PATH_BASE}/.cookies/cookies_zwcp
 ########################################################################################################
 function print_usage()
 {
-	echo "usage : sp <class> <sample>"
+	echo "usage : zwcp <file>"
 	echo ""
 	echo "class list:"
 	echo ${SAMPLE_CLASS}
 	echo ""
 	echo "optioin list:"
 	echo "-h     help"
-	echo "-ls    list sample      sp -ls <class>"
-	echo "-rp    replace key      sp -rp <dir/file> <key>"
+	echo "-mv    movefile"
 }
 
 ########################################################################################################
@@ -24,8 +23,8 @@ function print_usage()
 function zwcp_entry()
 {
 	if [ $# = 0 ];then
-		$PATH_COOKIES
-		exit 1
+		CMD=`cat $PATH_COOKIES`
+		$CMD
 	fi
 
 	case $1 in

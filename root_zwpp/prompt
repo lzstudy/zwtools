@@ -1,1 +1,3 @@
-# 你好
+# 编译RK3588
+make ARCH=arm64 menuconfig
+
